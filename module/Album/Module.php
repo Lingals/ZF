@@ -7,8 +7,12 @@ namespace Album;
 // Add these import statements:
 use Album\Model\Album;
 use Album\Model\AlbumTable;
+use Album\Model\UserTable;
+use Album\Model\User;
 use Zend\Db\ResultSet\ResultSet;
 use Zend\Db\TableGateway\TableGateway;
+use Zend\Authentication\AuthenticationService;
+use Zend\Authentication\Storage\Session;
 
 class Module
 {
@@ -46,6 +50,22 @@ class Module
 							$resultSetPrototype = new ResultSet();
 							$resultSetPrototype->setArrayObjectPrototype(new Album());
 							return new TableGateway('album', $dbAdapter, null, $resultSetPrototype);
+						},
+// 						'Album\Model\UserTable' =>  function($sm) {
+// 							$tableGateway = $sm->get('AlbumTableGateway');
+// 							$table = new UserTable($tableGateway);
+// 							return $table;
+// 						},
+// 						'UserTableGateway' => function ($sm) {
+// 							$dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+// 							$resultSetPrototype = new ResultSet();
+// 							$resultSetPrototype->setArrayObjectPrototype(new Album());
+// 							return new TableGateway('album', $dbAdapter, null, $resultSetPrototype);
+// 						},
+						'AlbumAuth'=>function($sm){
+							$auth=new AuthenticationService();
+							$auth->setStorage(new Session());
+							return $auth;
 						},
 				),
 		);

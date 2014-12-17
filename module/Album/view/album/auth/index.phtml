@@ -1,0 +1,40 @@
+<?php 
+$eltLogin=$formAuth->get('login');
+$eltPassword=$formAuth->get('password');
+$eltMail=$formAuth->get('mail');
+$formAuth->setAttribute('action',$this->url('auth',array('action'=>'index')));
+// $this->form->prepare();
+?>
+<div class="modal-dialog">
+<div class="modal-content">
+
+<?php echo $this->form()->openTag($formAuth) ?>
+
+<div class="modal-header">
+<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+<h4 class="modal-title">Authentification sur MonAlbum.fr</h4>
+<?php echo $this->flashMessenger()->render('error',array('alert','alert-danger')); ?>
+</div>
+<div class="modal-body">
+
+<p>
+<?php 
+	echo $this->formRow($eltLogin);
+	echo '<br>';
+	echo $this->formRow($eltPassword);
+	echo '<br>';
+	echo $this->formRow($eltMail);
+?>
+</p>
+
+</div>
+<div class="modal-footer">
+<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+<!-- <button type="submit" class="btn creer compte">Creer un compte</button>-->
+<button type="submit" class="btn btn-primary">s'identifier</button>
+</div>
+
+<?php echo $this->form()->closeTag() ?>
+
+</div><!-- /.modal-content -->
+</div><!-- /.modal-dialog -->

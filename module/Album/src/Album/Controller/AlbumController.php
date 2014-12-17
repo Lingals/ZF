@@ -5,6 +5,7 @@ use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Album\Form\AlbumForm;
 use Album\Model\Album;
+use Zend\Authentication\AuthenticationService;
 
 class AlbumController extends AbstractActionController
 {
@@ -19,6 +20,10 @@ class AlbumController extends AbstractActionController
 
     public function addAction()
     {
+    	$auth= new AuthenticationService();
+    	if (!$auth->hasIdentity()){
+    		$this->redirect()->toRoute('auth');
+    	}
     	$form = new AlbumForm();
     	$form->get('submit')->setValue('Add');
     	
@@ -42,6 +47,10 @@ class AlbumController extends AbstractActionController
 
     public function editAction()
     {
+    	$auth= new AuthenticationService();
+    	if (!$auth->hasIdentity()){
+    		$this->redirect()->toRoute('auth');
+    	}
     	$id = (int) $this->params()->fromRoute('id', 0);
     	if (!$id) {
     		return $this->redirect()->toRoute('album', array(
@@ -85,6 +94,7 @@ class AlbumController extends AbstractActionController
 
     public function deleteAction()
     {
+    	
     	$id = (int) $this->params()->fromRoute('id', 0);
     	if (!$id) {
     		return $this->redirect()->toRoute('album');
