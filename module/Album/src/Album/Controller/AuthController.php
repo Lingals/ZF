@@ -18,6 +18,9 @@ use Album\Utility\AuthAdapter;
 class AuthController extends AbstractActionController{
 	
 	public function indexAction(){
+		
+		
+		
 		$form = $this->createForm();
 		
 		$request = $this->getRequest();

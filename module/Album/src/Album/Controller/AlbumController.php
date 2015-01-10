@@ -6,6 +6,8 @@ use Zend\View\Model\ViewModel;
 use Album\Form\AlbumForm;
 use Album\Model\Album;
 use Zend\Authentication\AuthenticationService;
+use Album\Utility\AclService;
+use Zend\Permissions\Acl\Acl;
 
 class AlbumController extends AbstractActionController
 {
@@ -17,13 +19,29 @@ class AlbumController extends AbstractActionController
             'albums' => $this->getAlbumTable()->fetchAll(),
         ));
     }
-
+    
+    
     public function addAction()
     {
-    	$auth= new AuthenticationService();
-    	if (!$auth->hasIdentity()){
-    		$this->redirect()->toRoute('auth');
-    	}
+		$serviceManager = $this->getServiceLocator();
+		$auth=$serviceManager->get('AlbumAuth');
+    	if ($auth->hasIdentity()){
+    		$identity=$auth->getIdentity();
+    		$role=$identity['role'];
+       	} else 
+       		return $this->redirect()->toRoute('auth',array(
+       				'action'=>'index'
+       		));
+       		
+       	$acl=$serviceManager->get('AclService');
+       	$ressource=__METHOD__;
+       	if(!$acl->isAllowed($role,$ressource)){
+       				return $this->redirect()->toRoute('auth',array(
+       				'action'=>'index'
+       		));
+       	}
+       	
+       	
     	$form = new AlbumForm();
     	$form->get('submit')->setValue('Add');
     	
@@ -47,6 +65,24 @@ class AlbumController extends AbstractActionController
 
     public function editAction()
     {
+    	$serviceManager = $this->getServiceLocator();
+    	$auth=$serviceManager->get('AlbumAuth');
+    	if ($auth->hasIdentity()){
+    		$identity=$auth->getIdentity();
+    		$role=$identity['role'];
+    	} else
+    		return $this->redirect()->toRoute('auth',array(
+    				'action'=>'index'
+    		));
+    		 
+    		$acl=$serviceManager->get('AclService');
+    		$ressource=__METHOD__;
+    		if(!$acl->isAllowed($role,$ressource)){
+    			return $this->redirect()->toRoute('auth',array(
+    					'action'=>'index'
+    			));
+    		}
+    	
     	$auth= new AuthenticationService();
     	if (!$auth->hasIdentity()){
     		$this->redirect()->toRoute('auth');
@@ -94,6 +130,23 @@ class AlbumController extends AbstractActionController
 
     public function deleteAction()
     {
+    	$serviceManager = $this->getServiceLocator();
+    	$auth=$serviceManager->get('AlbumAuth');
+    	if ($auth->hasIdentity()){
+    		$identity=$auth->getIdentity();
+    		$role=$identity['role'];
+    	} else
+    		return $this->redirect()->toRoute('auth',array(
+    				'action'=>'index'
+    		));
+    		 
+    		$acl=$serviceManager->get('AclService');
+    		$ressource=__METHOD__;
+    		if(!$acl->isAllowed($role,$ressource)){
+    			return $this->redirect()->toRoute('auth',array(
+    					'action'=>'index'
+    			));
+    		}
     	
     	$id = (int) $this->params()->fromRoute('id', 0);
     	if (!$id) {

@@ -13,6 +13,8 @@ use Zend\Db\ResultSet\ResultSet;
 use Zend\Db\TableGateway\TableGateway;
 use Zend\Authentication\AuthenticationService;
 use Zend\Authentication\Storage\Session;
+use Zend\Permissions\Acl\Acl;
+use Album\Utility\AclService;
 
 class Module
 {
@@ -66,6 +68,10 @@ class Module
 							$auth=new AuthenticationService();
 							$auth->setStorage(new Session());
 							return $auth;
+						},
+						'AclService'=>function($m){
+							$acl=new AclService();
+							return $acl;
 						},
 				),
 		);
